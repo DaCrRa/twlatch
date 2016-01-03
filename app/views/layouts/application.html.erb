@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Twlatch</title>
+    <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+    <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+    <%= favicon_link_tag 'twlatch.png' %>
+    <%= csrf_meta_tags %>
+  </head>
+  <body>
+
+    <div class="logo">
+      <%= image_tag("twlatch.png", :width => 100) %>
+    </div>
+
+    <div class="box">
+      <% if current_user %>
+          <%= image_tag("twitter-icon.png", :width => 20) %><strong> <%= current_user.nickname %></strong>
+
+        (<%= link_to "Sign out", signout_path, id: "sign_out" %>)
+      <% else %>
+        <p><b>Welcome to Twlatch!</b><br>
+          With this tool you can use Latch on top of your twitter account to protect your tweets.
+        </p>
+          <br>
+        <p style="width: 250px; margin: 0 auto;">
+            <%= link_to "Sign in with your twitter account", "/auth/twitter", id: "sign_in", class: "button" %>
+        </p>
+      <% end %>
+
+      <div class="latch">
+        <%= yield %>
+      </div>
+    </div>
+  </body>
+</html>

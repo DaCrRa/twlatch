@@ -1,0 +1,35 @@
+<% if !current_user.nil? %>
+    <% if current_user.latch_id.blank? %>
+        <p>To start protecting and receiving alerts from your twitter account you just need to pair with latch, to do so, just introduce your pairing code from the latch application.</p>
+        <hr>
+        <%= "<p class='error'>The token is invalid or it has expired. Try it again please.</p>".html_safe if params[:e].present? %>
+        <br>
+        <%= form_tag(controller: "home", action: "pair") do %>
+            <%= label_tag(:token, "Pairing code:") %>
+            <%= text_field_tag(:token) %>
+            <%= submit_tag("Pair with Latch") %>
+        <% end %>
+    <% else %>
+        <p>
+          You account is paired with Latch<br>
+          <%= image_tag("latch_protected.png", :width => 200) %>
+        </p>
+        <hr>
+        <p>You can unpair your account, but you will remove Latch from protecting your Twitter account.</p>
+        <p class="error"><%= "Operation not allowed now" if params[:e].present? %></p>
+        <%= form_tag(controller: "home", action: "unpair") do %>
+            <%= submit_tag("Unpair your Latch Account") %>
+        <% end %>
+    <% end %>
+    <br>
+    <hr>
+    <% if @tweets.present? && @tweets.size > 0 %>
+        <h3>Deleted Tweets (<%= @tweets.size.to_s %>)</h3>
+        <%= @tweets.map {|x| "<div>#{ "<span class='tdate'>" + x.published.strftime("%c").to_s + "</span><br><span>" + x.tweet }</span></div>" }.join("<br />").html_safe %>
+    <% end %>
+    <br>
+    <% if @messages.present? && @messages.size > 0 %>
+        <h3>Deleted Outbound Messages (<%= @messages.size.to_s %>)</h3>
+        <%= @messages.map {|x| "<div>#{ "<span class='tdate'>" + x.published.strftime("%c").to_s + " - To: @" + x.destination + "</span><br><span>" + x.message }</span></div>" }.join("<br />").html_safe %>
+    <% end %>
+<% end %>
